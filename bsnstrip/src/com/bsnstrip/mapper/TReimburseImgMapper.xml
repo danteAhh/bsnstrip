@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsnstrip.mapper.TReimburseImgMapper">
+  <resultMap id="BaseResultMap" type="com.bsnstrip.pojo.TReimburseImg">
+    <id column="rbId" jdbcType="INTEGER" property="rbid" />
+    <id column="rbImgId" jdbcType="INTEGER" property="rbimgid" />
+    <result column="rbImgPath" jdbcType="VARCHAR" property="rbimgpath" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rbId, rbImgId, rbImgPath
+  </sql>
+  <select id="selectByExample" parameterType="com.bsnstrip.pojo.TReimburseImgExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_reimburse_img
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.bsnstrip.pojo.TReimburseImgKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_reimburse_img
+    where rbId = #{rbid,jdbcType=INTEGER}
+      and rbImgId = #{rbimgid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.bsnstrip.pojo.TReimburseImgKey">
+    delete from t_reimburse_img
+    where rbId = #{rbid,jdbcType=INTEGER}
+      and rbImgId = #{rbimgid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bsnstrip.pojo.TReimburseImgExample">
+    delete from t_reimburse_img
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bsnstrip.pojo.TReimburseImg">
+    insert into t_reimburse_img (rbId, rbImgId, rbImgPath
+      )
+    values (#{rbid,jdbcType=INTEGER}, #{rbimgid,jdbcType=INTEGER}, #{rbimgpath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bsnstrip.pojo.TReimburseImg">
+    insert into t_reimburse_img
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rbid != null">
+        rbId,
+      </if>
+      <if test="rbimgid != null">
+        rbImgId,
+      </if>
+      <if test="rbimgpath != null">
+        rbImgPath,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rbid != null">
+        #{rbid,jdbcType=INTEGER},
+      </if>
+      <if test="rbimgid != null">
+        #{rbimgid,jdbcType=INTEGER},
+      </if>
+      <if test="rbimgpath != null">
+        #{rbimgpath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bsnstrip.pojo.TReimburseImgExample" resultType="java.lang.Long">
+    select count(*) from t_reimburse_img
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_reimburse_img
+    <set>
+      <if test="record.rbid != null">
+        rbId = #{record.rbid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rbimgid != null">
+        rbImgId = #{record.rbimgid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rbimgpath != null">
+        rbImgPath = #{record.rbimgpath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_reimburse_img
+    set rbId = #{record.rbid,jdbcType=INTEGER},
+      rbImgId = #{record.rbimgid,jdbcType=INTEGER},
+      rbImgPath = #{record.rbimgpath,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bsnstrip.pojo.TReimburseImg">
+    update t_reimburse_img
+    <set>
+      <if test="rbimgpath != null">
+        rbImgPath = #{rbimgpath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rbId = #{rbid,jdbcType=INTEGER}
+      and rbImgId = #{rbimgid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bsnstrip.pojo.TReimburseImg">
+    update t_reimburse_img
+    set rbImgPath = #{rbimgpath,jdbcType=VARCHAR}
+    where rbId = #{rbid,jdbcType=INTEGER}
+      and rbImgId = #{rbimgid,jdbcType=INTEGER}
+  </update>
+</mapper>

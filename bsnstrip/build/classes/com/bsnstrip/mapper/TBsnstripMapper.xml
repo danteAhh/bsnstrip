@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsnstrip.mapper.TBsnstripMapper">
+  <resultMap id="BaseResultMap" type="com.bsnstrip.pojo.TBsnstrip">
+    <id column="bsId" jdbcType="INTEGER" property="bsid" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="bsTitle" jdbcType="VARCHAR" property="bstitle" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="back" jdbcType="VARCHAR" property="back" />
+    <result column="applyDate" jdbcType="TIMESTAMP" property="applydate" />
+    <result column="dealDate" jdbcType="TIMESTAMP" property="dealdate" />
+    <result column="isloan" jdbcType="CHAR" property="isloan" />
+    <result column="beginDate" jdbcType="TIMESTAMP" property="begindate" />
+    <result column="endDate" jdbcType="TIMESTAMP" property="enddate" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bsnstrip.pojo.TBsnstrip">
+    <result column="bsContent" jdbcType="LONGVARCHAR" property="bscontent" />
+  </resultMap>
+  
+  <select id="listBsnstrip" resultMap="ResultMapWithBLOBs">
+  	select * from t_bsnstrip b where b.userId = #{userId} and b.dealDate is not null and b.bsId not in (
+  		select bsId from t_reimburse r where r.userid = #{userId} and bsId is not null)
+  </select>
+  
+  <select id="listBsnstripToLoan" resultMap="ResultMapWithBLOBs">
+  	select * from t_bsnstrip b where b.userId = #{userId} and b.bsId not in (
+  		select bsId from t_loan l where l.userid = #{userId} and bsId is not null)
+  </select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    bsId, userId, bsTitle, status, back, applyDate, dealDate, isloan, beginDate, endDate, 
+    address
+  </sql>
+  <sql id="Blob_Column_List">
+    bsContent
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.bsnstrip.pojo.TBsnstripExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_bsnstrip
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.bsnstrip.pojo.TBsnstripExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_bsnstrip
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_bsnstrip
+    where bsId = #{bsid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_bsnstrip
+    where bsId = #{bsid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bsnstrip.pojo.TBsnstripExample">
+    delete from t_bsnstrip
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bsnstrip.pojo.TBsnstrip">
+    insert into t_bsnstrip (bsId, userId, bsTitle, 
+      status, back, applyDate, 
+      dealDate, isloan, beginDate, 
+      endDate, address, bsContent
+      )
+    values (#{bsid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{bstitle,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR}, #{back,jdbcType=VARCHAR}, #{applydate,jdbcType=TIMESTAMP}, 
+      #{dealdate,jdbcType=TIMESTAMP}, #{isloan,jdbcType=CHAR}, #{begindate,jdbcType=TIMESTAMP}, 
+      #{enddate,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, #{bscontent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bsnstrip.pojo.TBsnstrip">
+    insert into t_bsnstrip
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bsid != null">
+        bsId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="bstitle != null">
+        bsTitle,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="back != null">
+        back,
+      </if>
+      <if test="applydate != null">
+        applyDate,
+      </if>
+      <if test="dealdate != null">
+        dealDate,
+      </if>
+      <if test="isloan != null">
+        isloan,
+      </if>
+      <if test="begindate != null">
+        beginDate,
+      </if>
+      <if test="enddate != null">
+        endDate,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="bscontent != null">
+        bsContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bsid != null">
+        #{bsid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bstitle != null">
+        #{bstitle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="back != null">
+        #{back,jdbcType=VARCHAR},
+      </if>
+      <if test="applydate != null">
+        #{applydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealdate != null">
+        #{dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isloan != null">
+        #{isloan,jdbcType=CHAR},
+      </if>
+      <if test="begindate != null">
+        #{begindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null">
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="bscontent != null">
+        #{bscontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+    <selectKey keyProperty="bsid" resultType="java.lang.Integer" order="AFTER">
+    	SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="countByExample" parameterType="com.bsnstrip.pojo.TBsnstripExample" resultType="java.lang.Long">
+    select count(*) from t_bsnstrip
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_bsnstrip
+    <set>
+      <if test="record.bsid != null">
+        bsId = #{record.bsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null">
+        userId = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.bstitle != null">
+        bsTitle = #{record.bstitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.back != null">
+        back = #{record.back,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applydate != null">
+        applyDate = #{record.applydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dealdate != null">
+        dealDate = #{record.dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isloan != null">
+        isloan = #{record.isloan,jdbcType=CHAR},
+      </if>
+      <if test="record.begindate != null">
+        beginDate = #{record.begindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.enddate != null">
+        endDate = #{record.enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bscontent != null">
+        bsContent = #{record.bscontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update t_bsnstrip
+    set bsId = #{record.bsid,jdbcType=INTEGER},
+      userId = #{record.userid,jdbcType=INTEGER},
+      bsTitle = #{record.bstitle,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=CHAR},
+      back = #{record.back,jdbcType=VARCHAR},
+      applyDate = #{record.applydate,jdbcType=TIMESTAMP},
+      dealDate = #{record.dealdate,jdbcType=TIMESTAMP},
+      isloan = #{record.isloan,jdbcType=CHAR},
+      beginDate = #{record.begindate,jdbcType=TIMESTAMP},
+      endDate = #{record.enddate,jdbcType=TIMESTAMP},
+      address = #{record.address,jdbcType=VARCHAR},
+      bsContent = #{record.bscontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_bsnstrip
+    set bsId = #{record.bsid,jdbcType=INTEGER},
+      userId = #{record.userid,jdbcType=INTEGER},
+      bsTitle = #{record.bstitle,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=CHAR},
+      back = #{record.back,jdbcType=VARCHAR},
+      applyDate = #{record.applydate,jdbcType=TIMESTAMP},
+      dealDate = #{record.dealdate,jdbcType=TIMESTAMP},
+      isloan = #{record.isloan,jdbcType=CHAR},
+      beginDate = #{record.begindate,jdbcType=TIMESTAMP},
+      endDate = #{record.enddate,jdbcType=TIMESTAMP},
+      address = #{record.address,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bsnstrip.pojo.TBsnstrip">
+    update t_bsnstrip
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bstitle != null">
+        bsTitle = #{bstitle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="back != null">
+        back = #{back,jdbcType=VARCHAR},
+      </if>
+      <if test="applydate != null">
+        applyDate = #{applydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealdate != null">
+        dealDate = #{dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isloan != null">
+        isloan = #{isloan,jdbcType=CHAR},
+      </if>
+      <if test="begindate != null">
+        beginDate = #{begindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null">
+        endDate = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="bscontent != null">
+        bsContent = #{bscontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where bsId = #{bsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bsnstrip.pojo.TBsnstrip">
+    update t_bsnstrip
+    set userId = #{userid,jdbcType=INTEGER},
+      bsTitle = #{bstitle,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      back = #{back,jdbcType=VARCHAR},
+      applyDate = #{applydate,jdbcType=TIMESTAMP},
+      dealDate = #{dealdate,jdbcType=TIMESTAMP},
+      isloan = #{isloan,jdbcType=CHAR},
+      beginDate = #{begindate,jdbcType=TIMESTAMP},
+      endDate = #{enddate,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      bsContent = #{bscontent,jdbcType=LONGVARCHAR}
+    where bsId = #{bsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bsnstrip.pojo.TBsnstrip">
+    update t_bsnstrip
+    set userId = #{userid,jdbcType=INTEGER},
+      bsTitle = #{bstitle,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      back = #{back,jdbcType=VARCHAR},
+      applyDate = #{applydate,jdbcType=TIMESTAMP},
+      dealDate = #{dealdate,jdbcType=TIMESTAMP},
+      isloan = #{isloan,jdbcType=CHAR},
+      beginDate = #{begindate,jdbcType=TIMESTAMP},
+      endDate = #{enddate,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR}
+    where bsId = #{bsid,jdbcType=INTEGER}
+  </update>
+</mapper>
